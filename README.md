@@ -76,6 +76,24 @@ modules: [
       </td>
     </tr>
     <tr>
+      <td><code>fadeForecast</code></td>
+      <td>Toggles fading of the last two forecast rows.<br>
+        <br><b>Default value:</b>  <code>true</code>
+      </td>
+    </tr>
+    <tr>
+      <td><code>showCurrentWeather</code></td>
+      <td>Toggles display of current weather (icon + temperature).<br>
+        <br><b>Default value:</b>  <code>true</code>
+      </td>
+    </tr>
+    <tr>
+      <td><code>showTextSummary</code></td>
+      <td>Toggles display of weather text summary.<br>
+        <br><b>Default value:</b>  <code>true</code>
+      </td>
+    </tr>
+    <tr>
       <td><code>language</code></td>
       <td>The language of the weather text.<br>
         <br><b>Possible values:</b> <code>en</code>, <code>nl</code>, <code>ru</code>, etc ...
@@ -135,6 +153,14 @@ modules: [
       <td><code>maxHoursForecast</code></td>
       <td>Limit how many hours of weather forecast.<br>
         <br><b>Default value:</b>  <code>8</code>
+      </td>
+    </tr>
+    <tr>
+      <td><code>skipHours</code></td>
+      <td>Set how many hours should be skiped between to rows.<br>
+        <br><b>Example value:</b> <code>1</code>
+		<br>This will show every other hour (e.g. 3, 5, 7 ...)
+        <br><b>Default value:</b>  <code>0</code>
       </td>
     </tr>
     <tr>

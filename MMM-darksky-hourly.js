@@ -6,9 +6,12 @@ Module.register("MMM-darksky-hourly", {
     units: config.units,
     language: config.language,
     twentyFourHourTime: true,
+	showCurrentWeather: true,
+	showTextSummary: true,
     showPrecipitationPossibilityInRow: true,
     showDayInRow: true,
     showIconInRow: true,
+	fadeForecast: true,
     updateInterval: 10 * 60 * 1000, // every 5 minutes
     animationSpeed: 1000,
     initialLoadDelay: 0, // 0 seconds delay
@@ -21,6 +24,7 @@ Module.register("MMM-darksky-hourly", {
     latitude:  null,
     longitude: null,
     maxHoursForecast: 8,   // maximum number of days to show in forecast
+	skipHours: 0,
     unitTable: {
       'default':  'auto',
       'metric':   'si',
@@ -144,28 +148,33 @@ Module.register("MMM-darksky-hourly", {
     var currentWeather = this.weatherData.currently;
     var hourly         = this.weatherData.hourly;
 
-    var large = document.createElement("div");
-    large.className = "large light";
+	if(this.config.showCurrentWeather) {
+		var large = document.createElement("div");
+		large.className = "large light";
 
-    var icon = currentWeather ? currentWeather.icon : hourly.icon;
-    var iconClass = this.config.iconTable[icon];
-    var icon = document.createElement("span");
-    icon.className = 'big-icon wi ' + iconClass;
-    large.appendChild(icon);
+		var icon = currentWeather ? currentWeather.icon : hourly.icon;
+		var iconClass = this.config.iconTable[icon];
+		var icon = document.createElement("span");
+		icon.className = 'big-icon wi ' + iconClass;
+		large.appendChild(icon);
 
-    var temperature = document.createElement("span");
-    temperature.className = "bright";
-    temperature.innerHTML = " " + this.temp + "&deg;";
-    large.appendChild(temperature);
+		var temperature = document.createElement("span");
+		temperature.className = "bright";
+		temperature.innerHTML = " " + this.temp + "&deg;";
+		large.appendChild(temperature);
+		
+		wrapper.appendChild(large);
+	}
+	
+	if (this.config.showTextSummary) {
+		var summaryText = hourly.summary;
+		var summary = document.createElement("div");
+		summary.className = "small dimmed summary";
+		summary.innerHTML = summaryText;
 
-    var summaryText = hourly.summary;
-    var summary = document.createElement("div");
-    summary.className = "small dimmed summary";
-    summary.innerHTML = summaryText;
-
-    wrapper.appendChild(large);
-    wrapper.appendChild(summary);
-
+		wrapper.appendChild(summary);
+	}
+	
     wrapper.appendChild(this.renderWeatherForecast());
 
     return wrapper;
@@ -199,10 +208,10 @@ Module.register("MMM-darksky-hourly", {
   // A bunch of these make up the meat
   // In each row we can should display
   //  - time, icon, precip, temp
-  renderForecastRow: function (data) {
+  renderForecastRow: function (data, addClass) {
     // Start off with our row
     var row = document.createElement("tr");
-    row.className = "forecast-row";
+    row.className = "forecast-row" + (addClass ? " " + addClass : "");
 
     // time - hours
     var hourTextSpan = document.createElement("span");
@@ -242,10 +251,11 @@ Module.register("MMM-darksky-hourly", {
   renderWeatherForecast: function () {
     // Placeholders
     var numHours =  this.config.maxHoursForecast;
+	var skip = this.config.skipHours + 1;
 
     // Truncate for the data we need
     var filteredHours =
-      this.weatherData.hourly.data.filter( function(d, i) { return (i <= numHours); });
+      this.weatherData.hourly.data.filter( function(d, i) { return ((i <= (numHours * skip)) && (i % skip == 0)); });
 
     // Setup what we'll be displaying
     var display = document.createElement("table");
@@ -257,7 +267,16 @@ Module.register("MMM-darksky-hourly", {
     for (let i = 1; i < filteredHours.length; i++) {
       // insert day here if necessary
       var hourData = filteredHours[i];
-      var row = this.renderForecastRow(hourData);
+	  var addClass = "";
+	  if(this.config.fadeForecast) {
+		  if(i+2 == filteredHours.length) {
+			  addClass = "dark";
+		  }
+		  if(i+1 == filteredHours.length) {
+			  addClass = "darker";
+		  }
+	  }
+      var row = this.renderForecastRow(hourData, addClass);
 
       let day = this.getDayFromTime(hourData.time);
       let daySpan = document.createElement("span");

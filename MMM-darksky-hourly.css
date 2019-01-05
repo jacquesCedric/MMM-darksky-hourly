@@ -1,6 +1,14 @@
 .MMM-darksky-hourly {
 }
 
+.MMM-darksky-hourly .dark{
+	color: #777;
+}
+
+.MMM-darksky-hourly .darker{
+	color: #444;
+}
+
 .MMM-darksky-hourly .big-icon {
   font-size: 75%;
   line-height: 65px;
