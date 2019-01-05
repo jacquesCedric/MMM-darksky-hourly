@@ -157,7 +157,7 @@ modules: [
     </tr>
     <tr>
       <td><code>skipHours</code></td>
-      <td>Set how many hours should be skiped between to rows.<br>
+      <td>Set how many hours should be skiped between two rows.<br>
         <br><b>Example value:</b> <code>1</code>
 		<br>This will show every other hour (e.g. 3, 5, 7 ...)
         <br><b>Default value:</b>  <code>0</code>
