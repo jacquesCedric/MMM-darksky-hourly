@@ -162,10 +162,10 @@ Module.register("MMM-darksky-hourly", {
 		temperature.className = "bright";
 		temperature.innerHTML = " " + this.temp + "&deg;";
 		large.appendChild(temperature);
-		
+
 		wrapper.appendChild(large);
 	}
-	
+
 	if (this.config.showTextSummary) {
 		var summaryText = hourly.summary;
 		var summary = document.createElement("div");
@@ -174,7 +174,7 @@ Module.register("MMM-darksky-hourly", {
 
 		wrapper.appendChild(summary);
 	}
-	
+
     wrapper.appendChild(this.renderWeatherForecast());
 
     return wrapper;
@@ -198,12 +198,14 @@ Module.register("MMM-darksky-hourly", {
     }
     else {
       var twentyFourHourFormat = "am";
-      if (hour > 12) {
+      if (hour > 11) {
         twentyFourHourFormat = "pm";
       }
-      return (hour % 12) + twentyFourHourFormat;
+      hour = hour % 12;
+      hour = (hour == 0) ? 12 : hour;
+      return hour + twentyFourHourFormat;
     }
-  },  
+  },
 
   // A bunch of these make up the meat
   // In each row we can should display
@@ -217,7 +219,7 @@ Module.register("MMM-darksky-hourly", {
     var hourTextSpan = document.createElement("span");
     hourTextSpan.className = "forecast-hour"
     hourTextSpan.innerHTML = this.getHourFromTime(data.time)
-    
+
     // icon
     var iconClass = this.config.iconTable[data.icon];
     var icon = document.createElement("span");
@@ -290,7 +292,7 @@ Module.register("MMM-darksky-hourly", {
 
       display.appendChild(row);
     }
-    
+
     return display;
   },
 
